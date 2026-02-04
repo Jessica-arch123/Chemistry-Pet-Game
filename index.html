@@ -70,4 +70,168 @@
         <div class="content">
             <div id="missionText" class="mission-card">Mission...</div>
             <input type="number" id="userValue" placeholder="Enter numerical result">
-            <button class="btn btn-check" onclick="check
+            <button class="btn btn-check" onclick="checkAnswer()">Verify Formulation</button>
+            <button id="certBtn" class="btn btn-cert" onclick="generateCert()">🎓 View Graduation Cert</button>
+            
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-action" onclick="showScreen('screen-feed')">Feed 🍎</button>
+                <button class="btn btn-shop" onclick="showScreen('screen-shop')">Shop 🛒</button>
+            </div>
+            <div id="feedback" style="text-align:center; font-weight:bold; min-height: 20px; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <div id="screen-feed" class="screen">
+        <h2>Nutrition Station</h2>
+        <button class="btn" style="background:#2ecc71" onclick="feedPet(20, 30)">Vitamin Snack (-30 pts / +20 Mood)</button>
+        <button class="btn" style="background:var(--primary)" onclick="showScreen('screen-lab')">Back to Lab</button>
+    </div>
+
+    <div id="screen-shop" class="screen">
+        <h2>Lab Supplies</h2>
+        <button class="btn" style="background:#8e44ad" onclick="buyItem('🥼', 50)">Lab Coat (50 pts)</button>
+        <button class="btn" style="background:#2980b9" onclick="buyItem('🥽', 80)">Safety Goggles (80 pts)</button>
+        <button class="btn" style="background:var(--gold); color:#333" onclick="buyItem('👑', 200)">Chief Crown (200 pts)</button>
+        <button class="btn" style="background:var(--primary)" onclick="showScreen('screen-lab')">Back to Lab</button>
+    </div>
+
+    <div id="screen-cert" class="screen">
+        <div class="cert-card" id="certExport">
+            <h2 style="font-family: serif; color: #b8860b;">CERTIFICATE OF GRADUATION</h2>
+            <p>This recognizes that</p>
+            <h3 id="certName" style="border-bottom: 2px solid #333; display:inline-block; min-width: 200px;">Chemist</h3>
+            <p>has mastered Pharmaceutical Calculations</p>
+            <div style="font-size: 5rem; margin: 20px 0;">
+                <span id="finalPet">🐱</span>
+                <span id="finalAcc" style="position:absolute; font-size:2.5rem; margin-left:-30px;"></span>
+            </div>
+            <p><i>University Division of Pharmacy</i></p>
+        </div>
+        <button class="btn btn-check" style="margin-top:20px" onclick="window.print()">Print / Save PDF</button>
+        <button class="btn" style="background:var(--primary)" onclick="showScreen('screen-lab')">Back</button>
+    </div>
+</div>
+
+<script>
+    // FULL QUESTION BANK
+    const missions = [
+        // Level 1: Molarity
+        { lvl: 1, text: "Prepare 1.5 L of 0.1 M NaOH (MW: 40.00). Grams needed?", calc: () => 6.00 },
+        { lvl: 1, text: "A 0.5 M solution of Glucose (MW: 180.16) is needed in a 250 mL flask. Grams?", calc: () => 22.52 },
+        { lvl: 1, text: "How many Liters of 2.0 M HCl provide 0.5 moles of HCl?", calc: () => 0.25 },
+        { lvl: 1, text: "10g NaOH (MW: 40) is in 500 mL water. What is the Molarity?", calc: () => 0.50 },
+        { lvl: 1, text: "Mass of NaCl (MW: 58.44) for 2L of 0.15 M Saline?", calc: () => 17.53 },
+
+        // Level 2: Percentages
+        { lvl: 2, text: "Grams of Lidocaine needed for 150 mL of 2% (w/v) solution?", calc: () => 3.00 },
+        { lvl: 2, text: "mL of Ethanol for 500 mL of 70% (v/v) antiseptic?", calc: () => 350.00 },
+        { lvl: 2, text: "Grams of Sulfur for 60g of 10% (w/w) ointment?", calc: () => 6.00 },
+        { lvl: 2, text: "mL of solvent for 5g drug to make a 0.5% (w/v) solution?", calc: () => 1000 },
+        { lvl: 2, text: "Base needed for 200g of 5% (w/w) cream if 10g is drug?", calc: () => 190 },
+
+        // Level 3: Henderson-Hasselbalch (HA/A-)
+        { lvl: 3, text: "Buffer: [A-] = 0.5M, [HA] = 0.05M, pKa = 3.8. Find pH.", calc: () => 4.80 },
+        { lvl: 3, text: "If pH is 5.2 and pKa is 4.2, what is the required [A-] / [HA] ratio?", calc: () => 10 },
+        { lvl: 3, text: "A buffer has pH 4.76. If [A-] and [HA] are equal (0.1M), what is pKa?", calc: () => 4.76 },
+        { lvl: 3, text: "Find pH of buffer where [HA] is 0.2 M and [A-] is 0.02 M (pKa = 9.2).", calc: () => 8.20 },
+        { lvl: 3, text: "For pH 6.0 and pKa 5.0, what ratio of [A-] to [HA] is needed?", calc: () => 10 }
+    ];
+
+    let state = JSON.parse(localStorage.getItem('pharmaQuestSave')) || {
+        score: 0, mood: 100, pet: null, accessory: ''
+    };
+
+    function savePet(petIcon) {
+        state.pet = petIcon;
+        saveAndSync();
+        showScreen('screen-lab');
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'screen-lab') nextMission();
+    }
+
+    function nextMission() {
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('userValue').value = '';
+        
+        let filtered;
+        if (state.score < 80) filtered = missions.filter(m => m.lvl === 1);
+        else if (state.score < 200) filtered = missions.filter(m => m.lvl === 2);
+        else filtered = missions.filter(m => m.lvl === 3);
+
+        window.currentTask = filtered[Math.floor(Math.random() * filtered.length)];
+        document.getElementById('missionText').innerText = window.currentTask.text;
+        document.getElementById('levelNum').innerText = window.currentTask.lvl;
+    }
+
+    function checkAnswer() {
+        const val = parseFloat(document.getElementById('userValue').value);
+        const correct = window.currentTask.calc();
+        const fb = document.getElementById('feedback');
+
+        if (Math.abs(val - correct) < 0.1) {
+            state.score += 25;
+            state.mood = Math.min(100, state.mood + 10);
+            fb.innerText = "✅ Correct! Points earned.";
+            fb.style.color = "green";
+            setTimeout(nextMission, 1200);
+        } else {
+            state.score = Math.max(0, state.score - 5);
+            state.mood = Math.max(0, state.mood - 20);
+            fb.innerText = "❌ Error. Correct: " + correct;
+            fb.style.color = "red";
+        }
+        saveAndSync();
+    }
+
+    function feedPet(boost, cost) {
+        if(state.score >= cost) {
+            state.score -= cost;
+            state.mood = Math.min(100, state.mood + boost);
+            saveAndSync();
+            showScreen('screen-lab');
+        } else { alert("Not enough points!"); }
+    }
+
+    function buyItem(item, cost) {
+        if(state.score >= cost) {
+            state.score -= cost;
+            state.accessory = item;
+            saveAndSync();
+            showScreen('screen-lab');
+        } else { alert("Keep calculating to earn points!"); }
+    }
+
+    function generateCert() {
+        const name = prompt("Enter your Name for the Certificate:");
+        document.getElementById('certName').innerText = name || "Expert Chemist";
+        document.getElementById('finalPet').innerText = state.pet;
+        document.getElementById('finalAcc').innerText = state.accessory;
+        showScreen('screen-cert');
+    }
+
+    function saveAndSync() {
+        localStorage.setItem('pharmaQuestSave', JSON.stringify(state));
+        document.getElementById('score').innerText = state.score;
+        document.getElementById('playerPet').innerText = state.pet;
+        document.getElementById('playerAccessory').innerText = state.accessory;
+        document.getElementById('moodBar').style.width = state.mood + "%";
+        
+        if(state.score >= 500) document.getElementById('certBtn').style.display = 'block';
+        
+        // Update Rank
+        let r = "Intern";
+        if(state.score >= 80) r = "Junior Chemist";
+        if(state.score >= 200) r = "Senior Pharmacist";
+        if(state.score >= 500) r = "Chief Director";
+        document.getElementById('rankText').innerText = r;
+    }
+
+    if(state.pet) showScreen('screen-lab');
+    saveAndSync();
+</script>
+</body>
+</html>
