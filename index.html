@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Chemist: Graduation Edition</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f0f2f5; --gold: #f1c40f; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        .app-container { background: white; width: 100%; max-width: 450px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .screen { padding: 25px; display: none; }
+        .active { display: block; }
+
+        /* Mascot UI */
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; }
+        .pet-display { text-align: center; font-size: 5rem; position: relative; min-height: 100px; }
+        .mood-container { width: 80%; background: #ddd; height: 12px; border-radius: 6px; margin: 10px auto; overflow: hidden; border: 2px solid white; }
+        #moodBar { width: 100%; height: 100%; background: #2ecc71; transition: width 0.5s; }
+        .accessory-overlay { position: absolute; font-size: 2.5rem; top: -5px; right: 22%; }
+
+        /* Certificate Styling */
+        .cert-card { background: #fffcf0; border: 10px double #d4af37; padding: 30px; text-align: center; color: #333; position: relative; }
+        .cert-pet { font-size: 6rem; margin: 20px 0; }
+        .cert-title { font-family: 'Times New Roman', serif; font-size: 1.8rem; color: #b8860b; }
+        .cert-name { font-size: 1.5rem; border-bottom: 2px solid #333; display: inline-block; padding: 0 20px; margin: 10px 0; }
+
+        /* Buttons */
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .btn-check { background: var(--primary); }
+        .btn-cert { background: #b8860b; box-shadow: 0 4px #8b6d05; }
+        .pet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .pet-choice { font-size: 3rem; cursor: pointer; border: 2px solid #ddd; border-radius: 15px; padding: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="screen-login" class="screen active">
+        <h2>Select Your Lab Mascot</h2>
+        <div class="pet-grid">
+            <div class="pet-choice" onclick="savePet('🐱')">🐱</div>
+            <div class="pet-choice" onclick="savePet('🐶')">🐶</div>
+            <div class="pet-choice" onclick="savePet('🦊')">🦊</div>
+            <div class="pet-choice" onclick="savePet('🐼')">🐼</div>
+            <div class="pet-choice" onclick="savePet('🐨')">🐨</div>
+            <div class="pet-choice" onclick="savePet('🦁')">🦁</div>
+        </div>
+    </div>
+
+    <div id="screen-lab" class="screen">
+        <div class="header">
+            <div class="pet-display">
+                <span id="playerPet">🐱</span>
+                <span id="playerAccessory" class="accessory-overlay"></span>
+            </div>
+            <div class="mood-container"><div id="moodBar"></div></div>
+        </div>
+        <div id="missionText" style="background:#e8f4fd; padding:15px; border-radius:10px; margin:15px 0;">Mission...</div>
+        <input type="number" id="userValue" placeholder="Enter answer..." style="width:100%; padding:10px; margin-bottom:10px;">
+        <button class="btn btn-check" onclick="checkAnswer()">Verify Formulation</button>
+        <button id="certBtn" class="btn btn-cert" style="display:none" onclick="generateCert()">🎓 View Graduation Certificate</button>
+        <p style="text-align:center">Score: <span id="score">0</span> / 500 for Graduation</p>
+    </div>
+
+    <div id="screen-cert" class="screen">
+        <div class="cert-card">
+            <div class="cert-title">CERTIFICATE OF ACHIEVEMENT</div>
+            <p>This is to certify that</p>
+            <div class="cert-name" id="certStudentName">CHEMIST NAME</div>
+            <p>has successfully mastered <b>Molarity, Percentages,</b> and the <b>Henderson-Hasselbalch</b> Equation.</p>
+            <div class="cert-pet">
+                <span id="certPet">🐱</span>
+                <span id="certAcc" style="position:absolute; font-size:2.5rem; margin-left:-30px;"></span>
+            </div>
+            <p>Rank: <b id="finalRank">Chief Pharmaceutical Chemist</b></p>
+            <small>University Division of Pharmacy</small>
+        </div>
+        <button class="btn btn-check" style="margin-top:20px" onclick="window.print()">Print Certificate</button>
+        <button class="btn" style="background:#95a5a6" onclick="showScreen('screen-lab')">Back to Lab</button>
+    </div>
+</div>
+
+<script>
+    let state = JSON.parse(localStorage.getItem('pharmaSave')) || {
+        score: 0, mood: 100, pet: null, accessory: '🥼'
+    };
+
+    const missions = [
+        { lvl: 3, text: "Buffer: [A-] = 0.5M, [HA] = 0.05M, pKa = 3.8. Find pH.", calc: () => 4.80 },
+        { lvl: 3, text: "To reach pH 5.4 with pKa 4.4, what is the [A-] / [HA] ratio?", calc: () => 10 }
+    ];
+
+    function savePet(petIcon) {
+        state.pet = petIcon;
+        saveAndSync();
+        showScreen('screen-lab');
+    }
+
+    function generateCert() {
+        const name = prompt("Enter your full name for the certificate:");
+        document.getElementById('certStudentName').innerText = name || "Expert Chemist";
+        document.getElementById('certPet').innerText = state.pet;
+        document.getElementById('certAcc').innerText = state.accessory;
+        showScreen('screen-cert');
+    }
+
+    function checkAnswer() {
+        const val = parseFloat(document.getElementById('userValue').value);
+        // Using sample logic: Correct = Score up
+        state.score += 50; 
+        state.mood = 100;
+        saveAndSync();
+        document.getElementById('userValue').value = '';
+        alert("Correct! Score added.");
+    }
+
+    function saveAndSync() {
+        localStorage.setItem('pharmaSave', JSON.stringify(state));
+        document.getElementById('score').innerText = state.score;
+        document.getElementById('playerPet').innerText = state.pet;
+        document.getElementById('playerAccessory').innerText = state.accessory;
+        document.getElementById('moodBar').style.width = state.mood + "%";
+        if(state.score >= 500) document.getElementById('certBtn').style.display = 'block';
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    if(state.pet) showScreen('screen-lab');
+    saveAndSync();
+</script>
+</body>
+</html>
