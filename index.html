@@ -3,69 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaPet: The Ultimate PYQ Quest</title>
+    <title>PharmaPet: Smart & Cute PYQ Quest</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f0f2f5; --gold: #f1c40f; }
+        :root { --primary: #4a69bd; --accent: #78e08f; --bg: #fdfaf6; --gold: #f6b93b; --pink: #ff9ff3; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
-        .app-container { background: white; width: 100%; max-width: 450px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .app-container { background: white; width: 100%; max-width: 450px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); overflow: hidden; border: 4px solid #eee; }
         
         .screen { padding: 25px; display: none; }
         .active { display: block; }
 
-        /* Mascot & Layered UI */
-        .header { background: var(--primary); color: white; padding: 20px; text-align: center; }
+        /* Cute Mascot Stage */
+        .header { background: linear-gradient(135deg, var(--primary), #6a89cc); color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
+        
         .pet-stage { 
             position: relative; 
-            width: 160px; 
-            height: 160px; 
+            width: 180px; 
+            height: 180px; 
             margin: 0 auto; 
             display: flex; 
             justify-content: center; 
             align-items: center;
-            font-size: 6rem;
+            font-size: 7rem;
+            animation: bounce 2s infinite ease-in-out;
         }
-        /* Accessory Positioning */
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+
+        /* Accessory Layers */
         .acc { position: absolute; pointer-events: none; transition: all 0.3s; }
-        .acc-aura { font-size: 8rem; z-index: 1; opacity: 0.8; }
-        .acc-body { font-size: 4rem; bottom: 0; z-index: 3; }
-        .acc-eyes { font-size: 2.5rem; top: 45px; z-index: 4; }
-        .acc-head { font-size: 3rem; top: -5px; z-index: 5; }
-        .acc-hand { font-size: 2.5rem; right: 0; bottom: 20px; z-index: 4; }
+        .acc-aura { font-size: 9rem; z-index: 1; animation: pulse 1.5s infinite alternate; color: var(--gold); }
+        .acc-body { font-size: 4.5rem; bottom: 5px; z-index: 3; }
+        .acc-eyes { font-size: 3rem; top: 50px; z-index: 4; }
+        .acc-head { font-size: 3.5rem; top: -10px; z-index: 5; }
+        .acc-hand { font-size: 3rem; right: -10px; bottom: 30px; z-index: 4; }
 
-        .mood-container { width: 80%; background: #ddd; height: 12px; border-radius: 6px; margin: 10px auto; overflow: hidden; border: 2px solid white; }
-        #moodBar { width: 100%; height: 100%; background: #2ecc71; transition: width 0.5s; }
+        .mood-container { width: 60%; background: rgba(255,255,255,0.3); height: 10px; border-radius: 5px; margin: 15px auto; overflow: hidden; }
+        #moodBar { width: 100%; height: 100%; background: var(--accent); transition: width 0.5s; }
 
-        .stats { display: flex; justify-content: space-around; background: #eee; padding: 10px; font-weight: bold; }
-        .mission-card { background: #e8f4fd; border-left: 5px solid var(--primary); padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: 500; line-height: 1.4; }
-        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1rem; }
+        .stats { display: flex; justify-content: space-around; background: #f1f2f6; padding: 12px; font-weight: bold; color: var(--primary); }
+        .mission-card { background: #f0f7ff; border-radius: 20px; padding: 20px; margin: 20px 0; border: 2px dashed var(--primary); color: #2f3542; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
         
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
-        .btn-check { background: var(--primary); }
-        .btn-mcq { background: #3498db; }
-        .btn-mcq:hover { background: #2980b9; transform: translateY(-2px); }
-        .btn-shop { background: var(--gold); color: #333; }
-        .btn-music { background: rgba(255,255,255,0.2); border: 1px solid white; font-size: 0.8rem; padding: 5px 10px; width: auto; margin-top: 10px; }
+        input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 15px; margin-bottom: 15px; font-size: 1.1rem; text-align: center; }
+        
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; margin-bottom: 12px; font-size: 1rem; transition: 0.2s; }
+        .btn-check { background: var(--primary); box-shadow: 0 4px 0 #3c56a4; }
+        .btn-check:active { transform: translateY(2px); box-shadow: 0 2px 0 #3c56a4; }
+        .btn-mcq { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-mcq:hover { background: var(--primary); color: white; }
+        .btn-shop { background: var(--pink); }
 
-        .shop-grid { display: grid; grid-template-columns: 1fr; gap: 8px; max-height: 300px; overflow-y: auto; }
-        .owned { opacity: 0.6; border: 2px solid #2ecc71 !important; position: relative; }
-        .owned::after { content: "✅ Owned"; position: absolute; right: 10px; color: #2ecc71; font-size: 0.7rem; }
+        .shop-grid { display: grid; gap: 10px; max-height: 300px; overflow-y: auto; }
+        .owned { background: #dcdde1 !important; color: #7f8c8d !important; cursor: default; }
     </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop><source src="lab-ambience.mp3" type="audio/mpeg"></audio>
-
 <div class="app-container">
     <div id="screen-login" class="screen active">
-        <h2 style="text-align:center">PharmaPet 🧪</h2>
-        <p style="text-align:center">Choose your lab assistant:</p>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-            <div style="font-size:3rem; cursor:pointer; text-align:center;" onclick="savePet('🐱')">🐱</div>
-            <div style="font-size:3rem; cursor:pointer; text-align:center;" onclick="savePet('🐶')">🐶</div>
-            <div style="font-size:3rem; cursor:pointer; text-align:center;" onclick="savePet('🦊')">🦊</div>
-            <div style="font-size:3rem; cursor:pointer; text-align:center;" onclick="savePet('🐼')">🐼</div>
-            <div style="font-size:3rem; cursor:pointer; text-align:center;" onclick="savePet('🐨')">🐨</div>
-            <div style="font-size:3rem; cursor:pointer; text-align:center;" onclick="savePet('🦁')">🦁</div>
+        <h2 style="text-align:center; color: var(--primary);">Adopt Your Mascot ✨</h2>
+        <p style="text-align:center">Pick a partner for Discovery Day:</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+            <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐱')">🐱</div>
+            <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐶')">🐶</div>
+            <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🦊')">🦊</div>
+            <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐼')">🐼</div>
+            <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐨')">🐨</div>
+            <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐰')">🐰</div>
         </div>
     </div>
 
@@ -80,87 +84,93 @@
                 <div id="handLayer" class="acc acc-hand"></div>
             </div>
             <div class="mood-container"><div id="moodBar"></div></div>
-            <button class="btn btn-music" id="musicBtn" onclick="toggleMusic()">🔈 Music: OFF</button><br>
-            <small id="rankText">Intern Chemist</small>
+            <b id="rankText">INTERN</b>
         </div>
         
         <div class="stats">
-            <span>💰 <span id="score">0</span> pts</span>
+            <span>✨ <span id="score">0</span> pts</span>
             <span>🧪 Lvl <span id="levelNum">1</span></span>
         </div>
 
         <div class="content">
-            <div id="missionText" class="mission-card">Loading...</div>
+            <div id="missionText" class="mission-card">Let's solve some chemistry!</div>
             <div id="calcInputArea">
-                <input type="number" id="userValue" placeholder="Enter result">
-                <button class="btn btn-check" onclick="checkAnswer()">Verify Formulation</button>
+                <input type="number" id="userValue" placeholder="Enter number...">
+                <button class="btn btn-check" onclick="checkAnswer()">Verify Result</button>
             </div>
             <div id="mcqOptions" style="display: none; flex-direction: column; gap: 8px;"></div>
+            
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn" style="background:#3498db" onclick="showScreen('screen-feed')">Feed 🍎</button>
+                <button class="btn" style="background:var(--accent)" onclick="showScreen('screen-feed')">Feed 🍎</button>
                 <button class="btn btn-shop" onclick="showScreen('screen-shop')">Shop 🛒</button>
             </div>
-            <div id="feedback" style="text-align:center; font-weight:bold; min-height: 20px; margin-top: 5px;"></div>
+            <div id="feedback" style="text-align:center; font-weight:bold; margin-top: 5px;"></div>
         </div>
     </div>
 
     <div id="screen-shop" class="screen">
-        <h2>Prestige Boutique 🛒</h2>
-        <div class="shop-grid" id="shopList">
-            </div>
-        <button class="btn" style="background:var(--primary); margin-top:15px;" onclick="showScreen('screen-lab')">Return to Lab</button>
+        <h2 style="color:var(--pink)">Boutique 🎀</h2>
+        <div id="shopList" class="shop-grid"></div>
+        <button class="btn" style="background:var(--primary); margin-top:15px;" onclick="showScreen('screen-lab')">Back to Lab</button>
     </div>
 
     <div id="screen-feed" class="screen">
-        <h2>Nutrition Station</h2>
-        <button class="btn" style="background:#2ecc71" onclick="feedPet(30, 40)">Pure Glucose (-40 pts)</button>
+        <h2>Snack Time! 🍬</h2>
+        <button class="btn" style="background:var(--accent)" onclick="feedPet(30, 40)">Sugar Cube (-40 pts)</button>
         <button class="btn" style="background:var(--primary)" onclick="showScreen('screen-lab')">Back</button>
     </div>
 </div>
 
 <script>
     const items = [
-        { id: 'coat', label: 'Lab Coat', icon: '🥼', cost: 50, slot: 'body' },
-        { id: 'goggles', label: 'Safety Goggles', icon: '🥽', cost: 80, slot: 'eyes' },
+        { id: 'coat', label: 'Mini Lab Coat', icon: '🥼', cost: 50, slot: 'body' },
+        { id: 'goggles', label: 'Round Goggles', icon: '🥽', cost: 80, slot: 'eyes' },
         { id: 'shield', label: 'Face Shield', icon: '🛡️', cost: 120, slot: 'eyes' },
-        { id: 'flask', label: 'Erlenmeyer Flask', icon: '🧪', cost: 150, slot: 'hand' },
-        { id: 'crown', label: 'Chief Crown', icon: '👑', cost: 250, slot: 'head' },
-        { id: 'sparkles', label: 'Sparkle Aura', icon: '✨', cost: 350, slot: 'aura' },
-        { id: 'gown', label: 'Professor Gown', icon: '🎓', cost: 450, slot: 'head' }
+        { id: 'flask', label: 'Tiny Flask', icon: '🧪', cost: 150, slot: 'hand' },
+        { id: 'crown', label: 'Golden Tiara', icon: '👑', cost: 250, slot: 'head' },
+        { id: 'sparkles', label: 'Magic Dust', icon: '✨', cost: 350, slot: 'aura' },
+        { id: 'gown', label: 'Graduation Cap', icon: '🎓', cost: 450, slot: 'head' }
     ];
 
     const missions = [
-        { lvl: 1, isMCQ: true, text: "What is the molecular geometry of SO2?", options: ["T-shaped", "Linear", "Bent", "Trigonal Planar"], correct: "Bent" },
-        { lvl: 1, isMCQ: true, text: "Which geometry is associated with BF3?", options: ["Trigonal Planar", "Tetrahedral", "Bent", "Linear"], correct: "Trigonal Planar" },
-        { lvl: 1, isMCQ: true, text: "VBT Theory: A covalent bond forms when attractive forces are _____ than repulsive forces.", options: ["Smaller", "Equal", "Greater", "Zero"], correct: "Greater" },
-        { lvl: 1, text: "Calculate grams of NaOH (MW: 40) for 1.5 L of 0.1 M solution.", calc: () => 6.00 },
-        { lvl: 2, isMCQ: true, text: "IUPAC name for Ni(CO)4?", options: ["Nickel carbonyl", "Tetracarbonylnickel(0)", "Nickel(IV) carbonyl", "Carbonylnickel"], correct: "Tetracarbonylnickel(0)" },
-        { lvl: 2, isMCQ: true, text: "Solubility product expression (Ksp) for Ag2SO4?", options: ["Ksp = [Ag+][SO4^2-]", "Ksp = [Ag+]^2[SO4^2-]", "Ksp = [Ag+][SO4^2-]^2", "Ksp = 2[Ag][SO4]"], correct: "Ksp = [Ag+]^2[SO4^2-]" },
-        { lvl: 2, isMCQ: true, text: "Hybridisation of P in PCl5?", options: ["sp2", "sp3", "sp3d", "sp3d2"], correct: "sp3d" },
-        { lvl: 3, isMCQ: true, text: "Bond order for oxygen molecule cation (O2+)?", options: ["1", "1.5", "2", "2.5"], correct: "2.5" },
-        { lvl: 3, text: "Buffer: [A-] = 0.5 M, [HA] = 0.05 M, pKa = 3.8. Find pH.", calc: () => 4.80 },
-        { lvl: 3, text: "Target pH: 5.2, pKa: 4.2. Find required [A-]/[HA] ratio.", calc: () => 10.00 }
+        // LVL 1
+        { lvl: 1, isMCQ: true, text: "Geometry of SO2?", options: ["Linear", "Bent", "T-shaped"], correct: "Bent" },
+        { lvl: 1, isMCQ: true, text: "Geometry of BF3?", options: ["Trigonal Planar", "Tetrahedral", "Bent"], correct: "Trigonal Planar" },
+        { lvl: 1, isMCQ: true, text: "VBT Theory: Attraction must be ____ than repulsion to form a bond.", options: ["Smaller", "Equal", "Greater"], correct: "Greater" },
+        { lvl: 1, text: "NaOH (MW:40) for 1.5L of 0.1M? (grams)", calc: () => 6.00 },
+        { lvl: 1, text: "NaCl (MW:58.4) for 500mL of 0.2M? (grams)", calc: () => 5.84 },
+        { lvl: 1, isMCQ: true, text: "Type of bond from end-to-end orbital overlap?", options: ["Sigma (σ)", "Pi (π)", "Ionic"], correct: "Sigma (σ)" },
+        { lvl: 1, text: "Moles in 2L of 0.5M Glucose?", calc: () => 1.00 },
+        { lvl: 1, isMCQ: true, text: "Electron geometry of H2O?", options: ["Linear", "Tetrahedral", "Bent"], correct: "Tetrahedral" },
+        { lvl: 1, isMCQ: true, text: "Valence electrons in Phosphorus?", options: ["3", "5", "7"], correct: "5" },
+        { lvl: 1, text: "Molarity of 10g NaOH (MW:40) in 250mL water?", calc: () => 1.00 },
+        // LVL 2
+        { lvl: 2, isMCQ: true, text: "Ni(CO)4 IUPAC Name?", options: ["Tetracarbonylnickel(0)", "Nickel carbonyl"], correct: "Tetracarbonylnickel(0)" },
+        { lvl: 2, isMCQ: true, text: "Ksp expression for Ag2SO4?", options: ["[Ag+][SO4^2-]", "[Ag+]^2[SO4^2-]"], correct: "[Ag+]^2[SO4^2-]" },
+        { lvl: 2, isMCQ: true, text: "Hybridisation of P in PCl5?", options: ["sp3", "sp3d", "sp3d2"], correct: "sp3d" },
+        { lvl: 2, isMCQ: true, text: "Indicator for Acetic Acid vs KOH titration?", options: ["Methyl Orange", "Phenolphthalein"], correct: "Phenolphthalein" },
+        { lvl: 2, text: "Grams of Lidocaine for 200mL of 2% (w/v) solution?", calc: () => 4.00 },
+        { lvl: 2, text: "mL of Ethanol for 500mL of 70% (v/v) sanitizer?", calc: () => 350.00 },
+        { lvl: 2, isMCQ: true, text: "IUPAC for [Cu(NH3)4]2+?", options: ["Tetraamminecopper(II)", "Copper ammonium"], correct: "Tetraamminecopper(II)" },
+        { lvl: 2, isMCQ: true, text: "Hybridisation of S in SF6?", options: ["sp3d", "sp3d2", "dsp2"], correct: "sp3d2" },
+        { lvl: 2, isMCQ: true, text: "Ksp for PbCl2?", options: ["[Pb^2+][Cl^-]", "[Pb^2+][Cl^-]^2"], correct: "[Pb^2+][Cl^-]^2" },
+        { lvl: 2, text: "Grams Salicylic Acid for 100g of 5% (w/w) ointment?", calc: () => 5.00 },
+        // LVL 3
+        { lvl: 3, isMCQ: true, text: "Bond order for O2+?", options: ["2", "2.5", "3"], correct: "2.5" },
+        { lvl: 3, isMCQ: true, text: "Bond order for N2?", options: ["2", "2.5", "3"], correct: "3" },
+        { lvl: 3, text: "Buffer: [A-]=0.5, [HA]=0.05, pKa=3.8. Find pH.", calc: () => 4.80 },
+        { lvl: 3, text: "Target pH: 5.2, pKa: 4.2. Find [A-]/[HA] ratio.", calc: () => 10.00 },
+        { lvl: 3, text: "Aspirin buffer (pKa 3.5), pH 4.5. Ratio?", calc: () => 10.00 },
+        { lvl: 3, isMCQ: true, text: "Paramagnetic molecule?", options: ["N2", "O2", "F2"], correct: "O2" },
+        { lvl: 3, isMCQ: true, text: "If [A-] = [HA], then pH equals:", options: ["7", "pKa", "pKb"], correct: "pKa" },
+        { lvl: 3, text: "pH of buffer: [HA]=0.2M, [A-]=0.02M, pKa=9.2.", calc: () => 8.20 },
+        { lvl: 3, isMCQ: true, text: "Which MO is filled last for O2?", options: ["Sigma 2p", "Pi* 2p"], correct: "Pi* 2p" },
+        { lvl: 3, text: "Find pH: [A-]=0.25, [HA]=0.25, pKa=7.2.", calc: () => 7.20 }
     ];
 
-    let state = JSON.parse(localStorage.getItem('pharmaPetLayers')) || { 
-        score: 0, mood: 100, pet: null, ownedItems: [] 
-    };
-    
+    let state = JSON.parse(localStorage.getItem('pharmaSmartCute')) || { score: 0, mood: 100, pet: null, ownedItems: [] };
+    let usedQuestions = [];
     let currentTask = {};
-    let isMusicPlaying = false;
-    const music = document.getElementById('bgMusic');
-
-    function toggleMusic() {
-        if (!isMusicPlaying) {
-            music.play().catch(e => alert("Interact first!"));
-            document.getElementById('musicBtn').innerText = "🔊 Music: ON";
-            isMusicPlaying = true;
-        } else {
-            music.pause();
-            document.getElementById('musicBtn').innerText = "🔈 Music: OFF";
-            isMusicPlaying = false;
-        }
-    }
 
     function savePet(pet) { state.pet = pet; saveAndSync(); showScreen('screen-lab'); }
 
@@ -171,70 +181,33 @@
         if(id === 'screen-shop') renderShop();
     }
 
-    function renderShop() {
-        const list = document.getElementById('shopList');
-        list.innerHTML = '';
-        items.forEach(item => {
-            const isOwned = state.ownedItems.includes(item.id);
-            const btn = document.createElement('button');
-            btn.className = `btn ${isOwned ? 'owned' : ''}`;
-            btn.style.background = isOwned ? '#eee' : '#34495e';
-            btn.style.color = isOwned ? '#aaa' : 'white';
-            btn.innerText = `${item.label} (${item.cost} pts)`;
-            btn.onclick = () => buyItem(item);
-            list.appendChild(btn);
-        });
-    }
-
-    function buyItem(item) {
-        if(state.ownedItems.includes(item.id)) return;
-        if(state.score >= item.cost) {
-            state.score -= item.cost;
-            state.ownedItems.push(item.id);
-            saveAndSync();
-            renderShop();
-        } else { alert("Insufficient points! Solve more PYQs."); }
-    }
-
-    function saveAndSync() {
-        localStorage.setItem('pharmaPetLayers', JSON.stringify(state));
-        document.getElementById('score').innerText = state.score;
-        document.getElementById('mainPet').innerText = state.pet;
-        document.getElementById('moodBar').style.width = state.mood + "%";
-        
-        // Clear all layers
-        ['auraLayer','bodyLayer','eyeLayer','headLayer','handLayer'].forEach(l => document.getElementById(l).innerText = '');
-        
-        // Populate layers based on owned items
-        state.ownedItems.forEach(itemId => {
-            const item = items.find(i => i.id === itemId);
-            if(item) document.getElementById(`${item.slot}Layer`).innerText = item.icon;
-        });
-
-        let r = "Intern";
-        if(state.score >= 100) r = "Junior Researcher";
-        if(state.score >= 300) r = "Senior Pharmacist";
-        if(state.score >= 700) r = "Chief Director";
-        document.getElementById('rankText').innerText = r;
-    }
-
     function nextMission() {
         document.getElementById('feedback').innerText = '';
         document.getElementById('userValue').value = '';
-        let filtered = missions.filter(m => (state.score < 100 ? m.lvl === 1 : state.score < 300 ? m.lvl === 2 : m.lvl === 3));
-        currentTask = filtered[Math.floor(Math.random() * filtered.length)];
+        
+        let pool = missions.filter(m => (state.score < 100 ? m.lvl === 1 : state.score < 300 ? m.lvl === 2 : m.lvl === 3));
+        let available = pool.filter(q => !usedQuestions.includes(q.text));
+
+        if (available.length === 0) {
+            usedQuestions = usedQuestions.filter(txt => !pool.map(p => p.text).includes(txt));
+            available = pool;
+        }
+
+        currentTask = available[Math.floor(Math.random() * available.length)];
+        usedQuestions.push(currentTask.text);
+        
         document.getElementById('missionText').innerText = currentTask.text;
         document.getElementById('levelNum').innerText = currentTask.lvl;
 
         if (currentTask.isMCQ) {
             document.getElementById('calcInputArea').style.display = 'none';
-            const mcqArea = document.getElementById('mcqOptions');
-            mcqArea.style.display = 'flex'; mcqArea.innerHTML = '';
+            const mcq = document.getElementById('mcqOptions');
+            mcq.style.display = 'flex'; mcq.innerHTML = '';
             currentTask.options.forEach(opt => {
                 const b = document.createElement('button');
                 b.className = "btn btn-mcq"; b.innerText = opt;
                 b.onclick = () => processResult(opt === currentTask.correct);
-                mcqArea.appendChild(b);
+                mcq.appendChild(b);
             });
         } else {
             document.getElementById('calcInputArea').style.display = 'block';
@@ -251,17 +224,52 @@
         const fb = document.getElementById('feedback');
         if (isCorrect) {
             state.score += 25; state.mood = Math.min(100, state.mood + 10);
-            fb.innerText = "✅ Correct! Score +25"; fb.style.color = "green";
+            fb.innerText = "✨ Awesome! Mascot is happy!"; fb.style.color = "var(--accent)";
             setTimeout(nextMission, 1000);
         } else {
-            state.score = Math.max(0, state.score - 5); state.mood = Math.max(0, state.mood - 20);
-            fb.innerText = "❌ Incorrect. Try again."; fb.style.color = "red";
+            state.score = Math.max(0, state.score - 5); state.mood = Math.max(0, state.mood - 15);
+            fb.innerText = "Oops! Try again."; fb.style.color = "red";
         }
         saveAndSync();
     }
 
+    function renderShop() {
+        const list = document.getElementById('shopList'); list.innerHTML = '';
+        items.forEach(item => {
+            const owned = state.ownedItems.includes(item.id);
+            const b = document.createElement('button');
+            b.className = `btn ${owned ? 'owned' : ''}`;
+            b.innerText = `${item.label} (${item.cost} pts)`;
+            if(!owned) b.onclick = () => {
+                if(state.score >= item.cost) {
+                    state.score -= item.cost; state.ownedItems.push(item.id);
+                    saveAndSync(); renderShop();
+                } else alert("Solve more chemistry to earn points!");
+            };
+            list.appendChild(b);
+        });
+    }
+
     function feedPet(boost, cost) {
         if(state.score >= cost) { state.score -= cost; state.mood = Math.min(100, state.mood + boost); saveAndSync(); showScreen('screen-lab'); }
+    }
+
+    function saveAndSync() {
+        localStorage.setItem('pharmaSmartCute', JSON.stringify(state));
+        document.getElementById('score').innerText = state.score;
+        document.getElementById('moodBar').style.width = state.mood + "%";
+        document.getElementById('mainPet').innerText = state.mood < 40 ? '😿' : state.pet;
+        
+        ['auraLayer','bodyLayer','eyeLayer','headLayer','handLayer'].forEach(l => document.getElementById(l).innerText = '');
+        state.ownedItems.forEach(id => {
+            const itm = items.find(i => i.id === id);
+            if(itm) document.getElementById(`${itm.slot}Layer`).innerText = itm.icon;
+        });
+
+        let r = "INTERN";
+        if(state.score >= 100) r = "JUNIOR RESEARCHER";
+        if(state.score >= 300) r = "SENIOR PHARMACIST";
+        document.getElementById('rankText').innerText = r;
     }
 
     if(state.pet) { showScreen('screen-lab'); saveAndSync(); }
