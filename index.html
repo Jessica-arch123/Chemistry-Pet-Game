@@ -8,25 +8,12 @@
         :root { --primary: #4a69bd; --accent: #78e08f; --bg: #fdfaf6; --gold: #f6b93b; --pink: #ff9ff3; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
         .app-container { background: white; width: 100%; max-width: 450px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); overflow: hidden; border: 4px solid #eee; }
-        
         .screen { padding: 25px; display: none; }
         .active { display: block; }
 
         /* Cute Mascot Stage */
         .header { background: linear-gradient(135deg, var(--primary), #6a89cc); color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
-        
-        .pet-stage { 
-            position: relative; 
-            width: 180px; 
-            height: 180px; 
-            margin: 0 auto; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            font-size: 7rem;
-            animation: bounce 2s infinite ease-in-out;
-        }
-
+        .pet-stage { position: relative; width: 180px; height: 180px; margin: 0 auto; display: flex; justify-content: center; align-items: center; font-size: 7rem; animation: bounce 2s infinite ease-in-out; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
 
@@ -45,16 +32,15 @@
         .mission-card { background: #f0f7ff; border-radius: 20px; padding: 20px; margin: 20px 0; border: 2px dashed var(--primary); color: #2f3542; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
         
         input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 15px; margin-bottom: 15px; font-size: 1.1rem; text-align: center; }
-        
         .btn { width: 100%; padding: 14px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; margin-bottom: 12px; font-size: 1rem; transition: 0.2s; }
         .btn-check { background: var(--primary); box-shadow: 0 4px 0 #3c56a4; }
-        .btn-check:active { transform: translateY(2px); box-shadow: 0 2px 0 #3c56a4; }
-        .btn-mcq { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-mcq { background: white; color: var(--primary); border: 2px solid var(--primary); text-align: center; line-height: 1.2; }
         .btn-mcq:hover { background: var(--primary); color: white; }
         .btn-shop { background: var(--pink); }
 
         .shop-grid { display: grid; gap: 10px; max-height: 300px; overflow-y: auto; }
-        .owned { background: #dcdde1 !important; color: #7f8c8d !important; cursor: default; }
+        .owned { background: #dcdde1 !important; color: #7f8c8d !important; }
+        sub, sup { font-size: 0.7em; }
     </style>
 </head>
 <body>
@@ -62,7 +48,6 @@
 <div class="app-container">
     <div id="screen-login" class="screen active">
         <h2 style="text-align:center; color: var(--primary);">Adopt Your Mascot ✨</h2>
-        <p style="text-align:center">Pick a partner for Discovery Day:</p>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
             <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐱')">🐱</div>
             <div style="font-size:3.5rem; cursor:pointer; text-align:center;" onclick="savePet('🐶')">🐶</div>
@@ -86,12 +71,10 @@
             <div class="mood-container"><div id="moodBar"></div></div>
             <b id="rankText">INTERN</b>
         </div>
-        
         <div class="stats">
             <span>✨ <span id="score">0</span> pts</span>
             <span>🧪 Lvl <span id="levelNum">1</span></span>
         </div>
-
         <div class="content">
             <div id="missionText" class="mission-card">Let's solve some chemistry!</div>
             <div id="calcInputArea">
@@ -99,7 +82,6 @@
                 <button class="btn btn-check" onclick="checkAnswer()">Verify Result</button>
             </div>
             <div id="mcqOptions" style="display: none; flex-direction: column; gap: 8px;"></div>
-            
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="btn" style="background:var(--accent)" onclick="showScreen('screen-feed')">Feed 🍎</button>
                 <button class="btn btn-shop" onclick="showScreen('screen-shop')">Shop 🛒</button>
@@ -134,41 +116,43 @@
 
     const missions = [
         // LVL 1
-        { lvl: 1, isMCQ: true, text: "Geometry of SO2?", options: ["Linear", "Bent", "T-shaped"], correct: "Bent" },
-        { lvl: 1, isMCQ: true, text: "Geometry of BF3?", options: ["Trigonal Planar", "Tetrahedral", "Bent"], correct: "Trigonal Planar" },
-        { lvl: 1, isMCQ: true, text: "VBT Theory: Attraction must be ____ than repulsion to form a bond.", options: ["Smaller", "Equal", "Greater"], correct: "Greater" },
-        { lvl: 1, text: "NaOH (MW:40) for 1.5L of 0.1M? (grams)", calc: () => 6.00 },
-        { lvl: 1, text: "NaCl (MW:58.4) for 500mL of 0.2M? (grams)", calc: () => 5.84 },
-        { lvl: 1, isMCQ: true, text: "Type of bond from end-to-end orbital overlap?", options: ["Sigma (σ)", "Pi (π)", "Ionic"], correct: "Sigma (σ)" },
+        { lvl: 1, isMCQ: true, text: "Geometry of SO<sub>2</sub>?", options: ["Linear", "Bent", "T-shaped", "Trigonal Planar"], correct: "Bent" },
+        { lvl: 1, isMCQ: true, text: "Geometry of BF<sub>3</sub>?", options: ["Trigonal Planar", "Tetrahedral", "Bent", "Octahedral"], correct: "Trigonal Planar" },
+        { lvl: 1, isMCQ: true, text: "Electron geometry of H<sub>2</sub>O?", options: ["Linear", "Tetrahedral", "Bent", "Trigonal Planar"], correct: "Tetrahedral" },
+        { lvl: 1, text: "Grams of NaOH (MW:40) for 1.5L of 0.1M?", calc: () => 6.00 },
+        { lvl: 1, text: "Grams of NaCl (MW:58.4) for 500mL of 0.2M?", calc: () => 5.84 },
+        { lvl: 1, isMCQ: true, text: "Valence electrons in Phosphorus?", options: ["3", "4", "5", "6"], correct: "5" },
+        { lvl: 1, isMCQ: true, text: "End-to-end orbital overlap forms which bond?", options: ["Sigma (σ)", "Pi (π)", "Delta (δ)", "Ionic"], correct: "Sigma (σ)" },
         { lvl: 1, text: "Moles in 2L of 0.5M Glucose?", calc: () => 1.00 },
-        { lvl: 1, isMCQ: true, text: "Electron geometry of H2O?", options: ["Linear", "Tetrahedral", "Bent"], correct: "Tetrahedral" },
-        { lvl: 1, isMCQ: true, text: "Valence electrons in Phosphorus?", options: ["3", "5", "7"], correct: "5" },
-        { lvl: 1, text: "Molarity of 10g NaOH (MW:40) in 250mL water?", calc: () => 1.00 },
+        { lvl: 1, isMCQ: true, text: "Bond forms when attraction is ___ repulsion.", options: ["<", "=", ">", "Zero"], correct: ">" },
+        { lvl: 1, text: "Molarity of 10g NaOH (MW:40) in 250mL?", calc: () => 1.00 },
+
         // LVL 2
-        { lvl: 2, isMCQ: true, text: "Ni(CO)4 IUPAC Name?", options: ["Tetracarbonylnickel(0)", "Nickel carbonyl"], correct: "Tetracarbonylnickel(0)" },
-        { lvl: 2, isMCQ: true, text: "Ksp expression for Ag2SO4?", options: ["[Ag+][SO4^2-]", "[Ag+]^2[SO4^2-]"], correct: "[Ag+]^2[SO4^2-]" },
-        { lvl: 2, isMCQ: true, text: "Hybridisation of P in PCl5?", options: ["sp3", "sp3d", "sp3d2"], correct: "sp3d" },
-        { lvl: 2, isMCQ: true, text: "Indicator for Acetic Acid vs KOH titration?", options: ["Methyl Orange", "Phenolphthalein"], correct: "Phenolphthalein" },
-        { lvl: 2, text: "Grams of Lidocaine for 200mL of 2% (w/v) solution?", calc: () => 4.00 },
-        { lvl: 2, text: "mL of Ethanol for 500mL of 70% (v/v) sanitizer?", calc: () => 350.00 },
-        { lvl: 2, isMCQ: true, text: "IUPAC for [Cu(NH3)4]2+?", options: ["Tetraamminecopper(II)", "Copper ammonium"], correct: "Tetraamminecopper(II)" },
-        { lvl: 2, isMCQ: true, text: "Hybridisation of S in SF6?", options: ["sp3d", "sp3d2", "dsp2"], correct: "sp3d2" },
-        { lvl: 2, isMCQ: true, text: "Ksp for PbCl2?", options: ["[Pb^2+][Cl^-]", "[Pb^2+][Cl^-]^2"], correct: "[Pb^2+][Cl^-]^2" },
-        { lvl: 2, text: "Grams Salicylic Acid for 100g of 5% (w/w) ointment?", calc: () => 5.00 },
+        { lvl: 2, isMCQ: true, text: "IUPAC Name for Ni(CO)<sub>4</sub>?", options: ["Nickel carbonyl", "Tetracarbonylnickel(0)", "Nickel(IV) carbonyl", "Tetra(carbon)nickel"], correct: "Tetracarbonylnickel(0)" },
+        { lvl: 2, isMCQ: true, text: "K<sub>sp</sub> expression for Ag<sub>2</sub>SO<sub>4</sub>?", options: ["[Ag<sup>+</sup>][SO<sub>4</sub><sup>2-</sup>]", "[Ag<sup>+</sup>]<sup>2</sup>[SO<sub>4</sub><sup>2-</sup>]", "[Ag<sup>+</sup>][SO<sub>4</sub><sup>2-</sup>]<sup>2</sup>", "[Ag<sup>2+</sup>][SO<sub>4</sub><sup>2-</sup>]"], correct: "[Ag<sup>+</sup>]<sup>2</sup>[SO<sub>4</sub><sup>2-</sup>]" },
+        { lvl: 2, isMCQ: true, text: "Hybridisation of P in PCl<sub>5</sub>?", options: ["sp<sup>3</sup>", "sp<sup>3</sup>d", "sp<sup>3</sup>d<sup>2</sup>", "dsp<sup>2</sup>"], correct: "sp<sup>3</sup>d" },
+        { lvl: 2, isMCQ: true, text: "Best indicator for Acetic Acid vs KOH?", options: ["Methyl Orange", "Phenolphthalein", "Litmus", "Potassium Chromate"], correct: "Phenolphthalein" },
+        { lvl: 2, text: "Grams Lidocaine for 200mL of 2% (w/v)?", calc: () => 4.00 },
+        { lvl: 2, isMCQ: true, text: "Hybridisation of S in SF<sub>6</sub>?", options: ["sp<sup>3</sup>d", "sp<sup>3</sup>d<sup>2</sup>", "sp<sup>3</sup>", "sp<sup>2</sup>"], correct: "sp<sup>3</sup>d<sup>2</sup>" },
+        { lvl: 2, isMCQ: true, text: "K<sub>sp</sub> for PbCl<sub>2</sub>?", options: ["[Pb<sup>2+</sup>][Cl<sup>-</sup>]", "[Pb<sup>2+</sup>][Cl<sup>-</sup>]<sup>2</sup>", "[Pb<sup>2+</sup>]<sup>2</sup>[Cl<sup>-</sup>]", "[Pb][Cl]<sub>2</sub>"], correct: "[Pb<sup>2+</sup>][Cl<sup>-</sup>]<sup>2</sup>" },
+        { lvl: 2, text: "mL Ethanol for 500mL of 70% (v/v)?", calc: () => 350.00 },
+        { lvl: 2, isMCQ: true, text: "IUPAC for [Cu(NH<sub>3</sub>)<sub>4</sub>]<sup>2+</sup>?", options: ["Copper ammonium", "Tetraamminecopper(II)", "Cupric ammonia", "Tetraaminocopper(0)"], correct: "Tetraamminecopper(II)" },
+        { lvl: 2, text: "Grams drug for 100g of 5% (w/w) ointment?", calc: () => 5.00 },
+
         // LVL 3
-        { lvl: 3, isMCQ: true, text: "Bond order for O2+?", options: ["2", "2.5", "3"], correct: "2.5" },
-        { lvl: 3, isMCQ: true, text: "Bond order for N2?", options: ["2", "2.5", "3"], correct: "3" },
-        { lvl: 3, text: "Buffer: [A-]=0.5, [HA]=0.05, pKa=3.8. Find pH.", calc: () => 4.80 },
-        { lvl: 3, text: "Target pH: 5.2, pKa: 4.2. Find [A-]/[HA] ratio.", calc: () => 10.00 },
-        { lvl: 3, text: "Aspirin buffer (pKa 3.5), pH 4.5. Ratio?", calc: () => 10.00 },
-        { lvl: 3, isMCQ: true, text: "Paramagnetic molecule?", options: ["N2", "O2", "F2"], correct: "O2" },
-        { lvl: 3, isMCQ: true, text: "If [A-] = [HA], then pH equals:", options: ["7", "pKa", "pKb"], correct: "pKa" },
-        { lvl: 3, text: "pH of buffer: [HA]=0.2M, [A-]=0.02M, pKa=9.2.", calc: () => 8.20 },
-        { lvl: 3, isMCQ: true, text: "Which MO is filled last for O2?", options: ["Sigma 2p", "Pi* 2p"], correct: "Pi* 2p" },
-        { lvl: 3, text: "Find pH: [A-]=0.25, [HA]=0.25, pKa=7.2.", calc: () => 7.20 }
+        { lvl: 3, isMCQ: true, text: "Bond order for O<sub>2</sub><sup>+</sup>?", options: ["1.5", "2.0", "2.5", "3.0"], correct: "2.5" },
+        { lvl: 3, isMCQ: true, text: "Bond order for N<sub>2</sub>?", options: ["1.5", "2.0", "2.5", "3.0"], correct: "3.0" },
+        { lvl: 3, text: "Buffer: [A<sup>-</sup>]=0.5, [HA]=0.05, pK<sub>a</sub>=3.8. pH?", calc: () => 4.80 },
+        { lvl: 3, text: "Target pH: 5.2, pK<sub>a</sub>: 4.2. Ratio [A<sup>-</sup>]/[HA]?", calc: () => 10.00 },
+        { lvl: 3, isMCQ: true, text: "Which molecule is paramagnetic?", options: ["N<sub>2</sub>", "O<sub>2</sub>", "F<sub>2</sub>", "H<sub>2</sub>"], correct: "O<sub>2</sub>" },
+        { lvl: 3, isMCQ: true, text: "In MO theory, π*<sub>2p</sub> is filled last for:", options: ["N<sub>2</sub>", "O<sub>2</sub>", "F<sub>2</sub>", "Li<sub>2</sub>"], correct: "O<sub>2</sub>" },
+        { lvl: 3, text: "pH of [HA]=0.2M, [A<sup>-</sup>]=0.02M, pK<sub>a</sub>=9.2?", calc: () => 8.20 },
+        { lvl: 3, text: "Aspirin (pK<sub>a</sub> 3.5), pH 4.5. Ratio?", calc: () => 10.00 },
+        { lvl: 3, isMCQ: true, text: "If [A<sup>-</sup>] = [HA], then pH equals:", options: ["7.0", "pK<sub>a</sub>", "pK<sub>b</sub>", "1.0"], correct: "pK<sub>a</sub>" },
+        { lvl: 3, text: "Find pH: [A<sup>-</sup>]=0.25, [HA]=0.25, pK<sub>a</sub>=7.2.", calc: () => 7.20 }
     ];
 
-    let state = JSON.parse(localStorage.getItem('pharmaSmartCute')) || { score: 0, mood: 100, pet: null, ownedItems: [] };
+    let state = JSON.parse(localStorage.getItem('pharmaCutePro')) || { score: 0, mood: 100, pet: null, ownedItems: [] };
     let usedQuestions = [];
     let currentTask = {};
 
@@ -184,19 +168,15 @@
     function nextMission() {
         document.getElementById('feedback').innerText = '';
         document.getElementById('userValue').value = '';
-        
         let pool = missions.filter(m => (state.score < 100 ? m.lvl === 1 : state.score < 300 ? m.lvl === 2 : m.lvl === 3));
         let available = pool.filter(q => !usedQuestions.includes(q.text));
-
         if (available.length === 0) {
             usedQuestions = usedQuestions.filter(txt => !pool.map(p => p.text).includes(txt));
             available = pool;
         }
-
         currentTask = available[Math.floor(Math.random() * available.length)];
         usedQuestions.push(currentTask.text);
-        
-        document.getElementById('missionText').innerText = currentTask.text;
+        document.getElementById('missionText').innerHTML = currentTask.text;
         document.getElementById('levelNum').innerText = currentTask.lvl;
 
         if (currentTask.isMCQ) {
@@ -205,7 +185,7 @@
             mcq.style.display = 'flex'; mcq.innerHTML = '';
             currentTask.options.forEach(opt => {
                 const b = document.createElement('button');
-                b.className = "btn btn-mcq"; b.innerText = opt;
+                b.className = "btn btn-mcq"; b.innerHTML = opt;
                 b.onclick = () => processResult(opt === currentTask.correct);
                 mcq.appendChild(b);
             });
@@ -224,7 +204,7 @@
         const fb = document.getElementById('feedback');
         if (isCorrect) {
             state.score += 25; state.mood = Math.min(100, state.mood + 10);
-            fb.innerText = "✨ Awesome! Mascot is happy!"; fb.style.color = "var(--accent)";
+            fb.innerText = "✨ Correct! +25 Points!"; fb.style.color = "var(--accent)";
             setTimeout(nextMission, 1000);
         } else {
             state.score = Math.max(0, state.score - 5); state.mood = Math.max(0, state.mood - 15);
@@ -244,7 +224,7 @@
                 if(state.score >= item.cost) {
                     state.score -= item.cost; state.ownedItems.push(item.id);
                     saveAndSync(); renderShop();
-                } else alert("Solve more chemistry to earn points!");
+                } else alert("Solve more puzzles to earn points!");
             };
             list.appendChild(b);
         });
@@ -255,23 +235,20 @@
     }
 
     function saveAndSync() {
-        localStorage.setItem('pharmaSmartCute', JSON.stringify(state));
+        localStorage.setItem('pharmaCutePro', JSON.stringify(state));
         document.getElementById('score').innerText = state.score;
         document.getElementById('moodBar').style.width = state.mood + "%";
         document.getElementById('mainPet').innerText = state.mood < 40 ? '😿' : state.pet;
-        
         ['auraLayer','bodyLayer','eyeLayer','headLayer','handLayer'].forEach(l => document.getElementById(l).innerText = '');
         state.ownedItems.forEach(id => {
             const itm = items.find(i => i.id === id);
             if(itm) document.getElementById(`${itm.slot}Layer`).innerText = itm.icon;
         });
-
         let r = "INTERN";
         if(state.score >= 100) r = "JUNIOR RESEARCHER";
         if(state.score >= 300) r = "SENIOR PHARMACIST";
         document.getElementById('rankText').innerText = r;
     }
-
     if(state.pet) { showScreen('screen-lab'); saveAndSync(); }
 </script>
 </body>
